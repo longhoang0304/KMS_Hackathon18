@@ -24,6 +24,7 @@ const genUserVerification = (verificationFunction) => async (req, res, next) => 
     const ret = await User.verifyToken(token);
     id = ret.id; // eslint-disable-line
     isAdmin = ret.isAdmin; // eslint-disable-line
+    console.log(isAdmin);
   } catch (error) {
     if (error.status === httpStatus.BAD_REQUEST) {
       return res.status(error.status).json({ message: error.message });

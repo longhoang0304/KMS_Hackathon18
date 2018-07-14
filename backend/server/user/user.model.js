@@ -86,7 +86,6 @@ UserSchema.statics = {
    * Get user by username
    */
   async findByUser(username) {
-    console.log(username);
     const user = await this.findOne({ username }).exec();
     if (user) {
       return user;
@@ -112,7 +111,6 @@ UserSchema.statics = {
     const decodedTokens = jwt.verify(tokens, config.secret);
     const { password, id } = decodedTokens;
     const user = (await this.get(id)).toObject();
-    console.log("snv", password, "cyx", user.password);
     if (!_.isEqual(user.password, password)) {
       throw new APIError('Your token is expired', httpStatus.BAD_REQUEST);
     }

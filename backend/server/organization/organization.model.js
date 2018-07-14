@@ -7,12 +7,27 @@ const OrganizationSchema = new Schema(
     name: {
       type: String,
       required: true,
-      maxlength: 200
+      maxlength: 255,
     },
     address: {
       type: String,
       required: true,
-      maxlength: 200
+      maxlength: 255,
+    },
+    email: {
+      type: String,
+      required: true,
+      maxlength: 255,
+    },
+    phone: {
+      type: String,
+      required: true,
+      maxlength: 32,
+    },
+    desc: {
+      type: String,
+      default: '',
+      maxlength: 1024,
     },
   },
   {

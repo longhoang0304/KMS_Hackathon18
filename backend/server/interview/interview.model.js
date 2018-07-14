@@ -6,24 +6,25 @@ const InterviewSchema = new Schema(
   {
     organizationId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
     },
     startTime: {
       type: Schema.Types.Date,
-      required: true
+      required: true,
     },
     duration: {
       type: Number,
-      required: true
+      required: true,
     },
     name: {
       type: String,
       required: true,
-      maxlength: 200
+      maxlength: 255,
     },
     requirementScore: {
-      type: Number
-    }
+      type: Number,
+      required: true,
+    },
   },
   {
     collection: 'interview',

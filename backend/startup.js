@@ -16,6 +16,7 @@ async function genAdmin() {
     log.warning('Admin account already exists!');
     return false;
   } catch (error) {
+    error.message.trim();
   }
   const pass = 'duy123';
   const salt = bcrypt.genSaltSync(10);
@@ -28,11 +29,12 @@ async function genAdmin() {
     products: null,
     isAdmin: true,
     fullName: '3k null team',
-    address: 'abc'
+    address: 'abc',
   });
 
   const token = jwt.sign({
     id: user._id,
+    password,
   }, config.secret);
 
   user.token = token;

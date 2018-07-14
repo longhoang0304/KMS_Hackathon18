@@ -6,15 +6,19 @@ const QuestionSchema = new Schema(
   {
     interviewId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
     },
     content: {
       type: String,
       required: true,
-      maxlength: 500
+      maxlength: 500,
     },
     keyword: {
-      type: [String]
+      type: [{
+        type: String,
+        required: true,
+      }],
+      required: true,
     },
   },
   {
