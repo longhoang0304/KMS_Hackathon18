@@ -20,6 +20,11 @@ const QuestionSchema = new Schema(
       }],
       required: true,
     },
+    timeLimit: {
+      type: Number,
+      default: 13,
+      required: true,
+    },
   },
   {
     collection: 'question',
