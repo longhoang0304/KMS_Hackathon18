@@ -56,10 +56,10 @@ class Welcome extends PureComponent {
         </LoadingDialog>
         <TouchableOpacity
           style={[styles.fullscreen, styles.flexBox]}
-          onPress={() => this.navigateToHome()}
+          onPress={() => this.checkInternetConnection()}
         >
           <WhiteText style={titleStyle}>
-            Busmap
+            3KAY
           </WhiteText>
           <WhiteText>
             Tap to continue

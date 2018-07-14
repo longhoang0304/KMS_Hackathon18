@@ -4,10 +4,11 @@ const initState = {
   errorMsg: '',
   isLoading: false,
   isLogin: false,
+  userId: '',
 };
 
 const loginReducer = (state = initState, action) => {
-  const { errorMsg } = action.payload || {};
+  const { errorMsg, userId } = action.payload || {};
   switch (action.type) {
     case AuthenticateTypes.AUTH_LOGIN: {
       return {
@@ -20,6 +21,7 @@ const loginReducer = (state = initState, action) => {
         ...state,
         isLoading: false,
         isLogin: true,
+        userId,
       };
     }
     case AuthenticateTypes.AUTH_LOGIN_FAILED: {

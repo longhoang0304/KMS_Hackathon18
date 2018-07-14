@@ -1,5 +1,7 @@
+import jwdDecode from 'jwt-decode';
 import { SystemTypes as SysTypes } from '../constants/ActionTypes';
 import { get, post, APIUrl, getToken } from '../lib/helper';
+import AuthActions from './authenticate';
 
 /* ============= CONNECTION ACTION START ================= */
 const connecting = () => ({
@@ -30,6 +32,7 @@ const connectToServer = () => async (dispatch) => {
 
   if (res.ok) {
     const token = await getToken();
+    dispatch(AuthActions.loginSuccess(jwdDecode(token).id || ''));
     dispatch(connectSuccess(!!token));
     return;
   }

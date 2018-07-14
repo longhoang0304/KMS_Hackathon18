@@ -2,8 +2,9 @@ import 'whatwg-fetch-timeout';
 import _ from 'lodash';
 import DB from './localDb';
 
-const APIUrl = (api) => `https://dcdcs-api.herokuapp.com/api/${api}`;
-// const APIUrl = (api) => `https://192.168.139.1/api/${api}`;
+// const APIUrl = (api) => `https://dcdcs-api.herokuapp.com/api/${api}`;
+// const APIUrl = (api) => `https://192.168.33.93:3000/api/${api}`;
+const APIUrl = (api) => `http://192.168.33.155:3000/api/${api}`;
 
 const getToken = async () => {
   try {

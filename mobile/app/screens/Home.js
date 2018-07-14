@@ -15,25 +15,24 @@ class Home extends Component {
     this.state = {
       date: moment().tz('Asia/Ho_Chi_Minh').format('ddd, DD MMM YYYY'),
       time: moment().tz('Asia/Ho_Chi_Minh').format('HH:mm:ss'),
-      mounted: false,
       showModal: false,
       dcState: 0,
       dryerState: 0,
       dryerMinute: 5,
     };
+    this.mounted = false;
   }
 
   componentDidMount() {
-    this.setState({ mounted: true });
     const intervalId = setInterval(this.updateTime.bind(this), 1000);
     this.setState({ intervalId });
+    this.mounted = true;
   }
 
   componentWillUnmount() {
     const { intervalId } = this.state;
     if (!intervalId) {
       clearInterval(intervalId);
-      this.setState({ mounted: false });
     }
   }
 
@@ -73,7 +72,7 @@ class Home extends Component {
   }
 
   updateTime() {
-    const { mounted } = this.state;
+    const { mounted } = this;
     if (!mounted) return;
     this.setState({
       date: moment().tz('Asia/Ho_Chi_Minh').format('ddd, DD MMM YYYY'),
@@ -152,17 +151,6 @@ class Home extends Component {
               alignItems: 'flex-start',
               paddingBottom: 15,
             }}>
-              <Button
-                buttonStyle={{
-                  backgroundColor: 'rgba(0, 242, 255, 0.6)',
-                  marginHorizontal: 0,
-                  marginVertical: 0,
-                  marginBottom: 15,
-                }}
-                rounded={true}
-                title='View map'
-                onPress={() => this.move()}
-              />
               <Button
                 buttonStyle={{
                   backgroundColor: 'rgba(0, 255, 187, 0.6)',

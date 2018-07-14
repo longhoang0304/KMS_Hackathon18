@@ -1,3 +1,4 @@
+import jwdDecode from 'jwt-decode';
 import { AuthenticateTypes as AuthTypes } from '../constants/ActionTypes';
 import { post, APIUrl } from '../lib/helper';
 import DB from '../lib/localDb';
@@ -6,8 +7,11 @@ const loggingIn = () => ({
   type: AuthTypes.AUTH_LOGIN,
 });
 
-const loginSuccess = () => ({
+const loginSuccess = (userId) => ({
   type: AuthTypes.AUTH_LOGIN_SUCCESS,
+  payload: {
+    userId,
+  },
 });
 
 const loginFailed = (errorMsg) => ({
@@ -30,7 +34,7 @@ const login = (username, password) => async (dispatch) => {
     if (res.ok) {
       const { token } = json;
       await DB.hsave('token', token);
-      dispatch(loginSuccess());
+      dispatch(loginSuccess(jwdDecode(token).id || ''));
     }
     const { message } = json;
     dispatch(loginFailed(message || 'Wrong password'));
@@ -42,6 +46,7 @@ const login = (username, password) => async (dispatch) => {
 
 const AuthenticateActions = {
   login,
+  loginSuccess,
 };
 
 export default AuthenticateActions;
