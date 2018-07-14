@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Busmap",
+    "version": "0.1",
+    "sdkVersion": "27.0.0",
+    "android": {
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyCe1PXpW_CJiI_GerEO1h5Trio1xUAtujU" }
+     }
+    }
+  }
+}
