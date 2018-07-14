@@ -1,5 +1,5 @@
 {
-  "name": "KMS Hackathon API Server",
+  "name": "api-server",
   "version": "1.0.0",
   "description": "API Server for KMS Hackathon",
   "main": "index.js",
