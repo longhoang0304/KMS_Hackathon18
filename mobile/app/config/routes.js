@@ -2,7 +2,7 @@ import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import Welcome from '../containers/Welcome';
 import Help from '../screens/Help';
 import Login from '../containers/Login';
-import Home from '../screens/Home';
+import Home from '../containers/Home';
 
 const HomeStack = createStackNavigator(
   {

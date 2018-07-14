@@ -1,13 +1,13 @@
 import { UserTypes } from '../constants/ActionTypes';
 import { get, APIUrl } from '../lib/helper';
-import DB from '../lib/localDb';
 
 const gettingInfo = () => ({
   type: UserTypes.USER_GET_INFO,
 });
 
-const getInfoSuccess = () => ({
+const getInfoSuccess = (payload) => ({
   type: UserTypes.USER_GET_INFO_SUCCESS,
+  payload,
 });
 
 const getInfoFailed = (errorMsg) => ({
@@ -17,17 +17,26 @@ const getInfoFailed = (errorMsg) => ({
   },
 });
 
+const clearError = () => ({
+  type: UserTypes.USER_CLEAR_ERROR_MESSAGE,
+});
 
-const getInfo = (userId) => async (dispatch) => {
+const getInfo = () => async (dispatch, getStore) => {
   dispatch(gettingInfo());
+  const store = getStore().login;
+  const { userId } = store;
   let res;
   try {
     res = await get(APIUrl(`users/${userId}`), true);
     const json = await res.json();
     if (res.ok) {
-      const { token } = json;
-      await DB.hsave('token', token);
-      dispatch(getInfoSuccess());
+      const {
+        username, fullName, email, address,
+      } = json;
+      dispatch(getInfoSuccess({
+        username, fullName, email, address,
+      }));
+      return;
     }
     const { message } = json;
     dispatch(getInfoFailed(message || 'Unknown error occured'));
@@ -39,6 +48,7 @@ const getInfo = (userId) => async (dispatch) => {
 
 const UserAction = {
   getInfo,
+  clearError,
 };
 
 export default UserAction;

@@ -1,12 +1,12 @@
 import moment from 'moment';
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, TouchableOpacity, Alert } from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import LoadingDialog from '../components/Common/LoadingDialog';
 
 import { H1, H6, WhiteText } from '../components/Text';
 import WeatherImage from '../components/Common/WeatherImage';
 import WallpaperBackground from '../components/Common/WallpaperBackground';
-import DryerSettingDialog from '../components/Common/DryerSettingDialog';
 // import styles from './styles';
 
 class Home extends Component {
@@ -16,17 +16,35 @@ class Home extends Component {
       date: moment().tz('Asia/Ho_Chi_Minh').format('ddd, DD MMM YYYY'),
       time: moment().tz('Asia/Ho_Chi_Minh').format('HH:mm:ss'),
       showModal: false,
-      dcState: 0,
-      dryerState: 0,
-      dryerMinute: 5,
     };
     this.mounted = false;
   }
 
   componentDidMount() {
+    const { getInfo } = this.props;
+    getInfo();
     const intervalId = setInterval(this.updateTime.bind(this), 1000);
     this.setState({ intervalId });
     this.mounted = true;
+  }
+
+  componentDidUpdate() {
+    const { errorMsg, getInfo, clearError } = this.props;
+    clearError();
+    if (errorMsg) {
+      Alert.alert(
+        'Error',
+        'Cannot gather information',
+        [
+          {
+            text: 'Try again', onPress: () => getInfo(),
+          },
+          {
+            text: 'Cancel', onPress: () => null,
+          },
+        ],
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -84,21 +102,14 @@ class Home extends Component {
     const {
       date,
       time,
-      dryerState,
-      showModal,
-      dryerMinute,
     } = this.state;
+    const { isLoading, fullName } = this.props;
 
     return (
       <WallpaperBackground>
-        <DryerSettingDialog
-          state={dryerState}
-          minute={dryerMinute}
-          isShow={showModal}
-          onChange={_minute => this.setState({ dryerMinute: _minute })}
-          toggleDialog={() => this.toggleModal()}
-          handleDryer={() => this.handleDryer()}
-        />
+        <LoadingDialog isShow={isLoading} >
+          <Text style={{ fontSize: 16 }}>Gathering information</Text>
+        </LoadingDialog>
         {/* =============== END POPUP DIALOG ================= */}
         <View style={{
             flex: 1,
@@ -119,17 +130,8 @@ class Home extends Component {
             <View style={{
                 flex: 1,
                 flexDirection: 'column',
-                alignItems: 'flex-start',
-              }}
-            >
-              <H1><WhiteText>35°</WhiteText></H1>
-              <H6><WhiteText>IDLING</WhiteText></H6>
-            </View>
-            <View style={{
-                flex: 1,
-                flexDirection: 'column',
                 justifyContent: 'flex-start',
-                alignItems: 'flex-end',
+                alignItems: 'flex-start',
               }}
             >
               <WeatherImage />
@@ -178,7 +180,7 @@ class Home extends Component {
                 {`${Home.genGreeting()},`}
               </WhiteText>
               <H6>
-                <WhiteText>Long Hoàng</WhiteText>
+                <WhiteText>{fullName}</WhiteText>
               </H6>
             </TouchableOpacity>
           </View>

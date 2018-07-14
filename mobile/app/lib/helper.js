@@ -32,6 +32,7 @@ const request = async (url, method, useToken, body) => {
     token = await getToken();
   }
   if (token) headers['x-access-token'] = token;
+  console.log(headers);
 
   const options = _.omitBy({
     method,

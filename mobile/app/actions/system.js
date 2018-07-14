@@ -32,7 +32,8 @@ const connectToServer = () => async (dispatch) => {
 
   if (res.ok) {
     const token = await getToken();
-    dispatch(AuthActions.loginSuccess(jwdDecode(token).id || ''));
+    const decoded = await jwdDecode(token);
+    dispatch(AuthActions.loginSuccess(decoded.id || ''));
     dispatch(connectSuccess(!!token));
     return;
   }
