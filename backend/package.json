@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "API Server for KMS Hackathon",
   "main": "index.js",
-  "repository": "https://github.com/longhoang0304/DCDCS_Server.git",
   "license": "MIT",
   "dependencies": {
     "babel-cli": "^6.26.0",
