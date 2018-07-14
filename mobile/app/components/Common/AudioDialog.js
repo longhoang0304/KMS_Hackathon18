@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
-import AudioRecord from './AudioRecord';
+import AudioRecord from '../../containers/AudioRecord';
 
 const AudioDialog = (props) => {
   const {

@@ -32,7 +32,6 @@ const request = async (url, method, useToken, body) => {
     token = await getToken();
   }
   if (token) headers['x-access-token'] = token;
-  console.log(headers);
 
   const options = _.omitBy({
     method,
@@ -61,5 +60,34 @@ const post = genHttpMethod('post');
 const put = genHttpMethod('put');
 const del = genHttpMethod('delete');
 
+async function postForm(url, uri) {
+  console.log('Uploading ' + uri);
+  const apiUrl = url;
+  const uriParts = uri.split('.');
+  const fileType = uriParts[uriParts.length - 1];
 
-export { getToken, APIUrl, get, post, put, del };
+  const formData = new FormData();
+  const token = await getToken();
+
+  formData.append('file', {
+    uri,
+    name: `recording.${fileType}`,
+    type: `audio/x-${fileType}`,
+  });
+
+  const options = {
+    method: 'POST',
+    body: formData,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': token,
+    },
+  };
+
+  console.log('POSTing ' + uri + ' to ' + apiUrl);
+  return fetch(apiUrl, options);
+}
+
+
+export { getToken, APIUrl, get, post, put, del, postForm };

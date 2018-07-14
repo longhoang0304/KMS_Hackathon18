@@ -7,6 +7,7 @@ import LoadingDialog from '../components/Common/LoadingDialog';
 import { H1, H6, WhiteText } from '../components/Text';
 import WeatherImage from '../components/Common/WeatherImage';
 import WallpaperBackground from '../components/Common/WallpaperBackground';
+import AudioDialog from '../components/Common/AudioDialog';
 // import styles from './styles';
 
 class Home extends Component {
@@ -102,11 +103,13 @@ class Home extends Component {
     const {
       date,
       time,
+      showModal,
     } = this.state;
     const { isLoading, fullName } = this.props;
 
     return (
       <WallpaperBackground>
+        <AudioDialog isShow={showModal} />
         <LoadingDialog isShow={isLoading} >
           <Text style={{ fontSize: 16 }}>Gathering information</Text>
         </LoadingDialog>

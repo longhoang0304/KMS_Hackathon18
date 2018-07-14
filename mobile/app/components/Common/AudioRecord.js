@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import  Expo, { Asset, Audio, FileSystem, Font, Permissions } from 'expo';
+import { Base64 } from 'js-base64';
 
 class Icon {
   constructor(module, width, height) {
@@ -66,7 +67,7 @@ class AudioRecord extends Component {
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY));
-    console.log(this.frecordingSettings);
+    // console.log(this.frecordingSettings);
     // // UNCOMMENT THIS TO TEST maxFileSize:
     // this.recordingSettings.android['maxFileSize'] = 12000;
   }
@@ -128,6 +129,7 @@ class AudioRecord extends Component {
     this.setState({
       isLoading: true,
     });
+
     if (this.sound !== null) {
       await this.sound.unloadAsync();
       this.sound.setOnPlaybackStatusUpdate(null);
@@ -160,12 +162,16 @@ class AudioRecord extends Component {
     this.setState({
       isLoading: true,
     });
+    const { sendAnswer } = this.props;
     try {
       await this.recording.stopAndUnloadAsync();
     } catch (error) {
       // Do nothing -- we are already unloaded.
     }
     const info = await FileSystem.getInfoAsync(this.recording.getURI());
+    const contents = await FileSystem.readAsStringAsync(this.recording.getURI());
+    sendAnswer(Base64.encode(contents));
+    // sendAnswer(this.recording.getURI());
     console.log(`FILE INFO: ${JSON.stringify(info)}`);
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -333,7 +339,6 @@ class AudioRecord extends Component {
           <View style={styles.recordingContainer}>
             <View />
             <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
               style={styles.wrapper}
               onPress={this._onRecordPressed}
               disabled={this.state.isLoading}>
@@ -385,7 +390,6 @@ class AudioRecord extends Component {
           <View style={[styles.buttonsContainerBase, styles.buttonsContainerTopRow]}>
             <View style={styles.volumeContainer}>
               <TouchableHighlight
-                underlayColor={BACKGROUND_COLOR}
                 style={styles.wrapper}
                 onPress={this._onMutePressed}
                 disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
@@ -405,7 +409,7 @@ class AudioRecord extends Component {
             </View>
             <View style={styles.playStopContainer}>
               <TouchableHighlight
-                underlayColor={BACKGROUND_COLOR}
+
                 style={styles.wrapper}
                 onPress={this._onPlayPausePressed}
                 disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
@@ -415,7 +419,7 @@ class AudioRecord extends Component {
                 />
               </TouchableHighlight>
               <TouchableHighlight
-                underlayColor={BACKGROUND_COLOR}
+
                 style={styles.wrapper}
                 onPress={this._onStopPressed}
                 disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
@@ -435,7 +439,7 @@ class AudioRecord extends Component {
               disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
             />
             <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
+
               style={styles.wrapper}
               onPress={this._onPitchCorrectionPressed}
               disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
@@ -454,7 +458,6 @@ class AudioRecord extends Component {
 const styles = StyleSheet.create({
   emptyContainer: {
     alignSelf: 'stretch',
-    backgroundColor: BACKGROUND_COLOR,
   },
   container: {
     flex: 1,
@@ -462,7 +465,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: BACKGROUND_COLOR,
   },
   noPermissionsText: {
     textAlign: 'center',
@@ -526,10 +528,8 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   image: {
-    backgroundColor: BACKGROUND_COLOR,
   },
   textButton: {
-    backgroundColor: BACKGROUND_COLOR,
     padding: 10,
   },
   buttonsContainerBase: {
