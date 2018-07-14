@@ -6,6 +6,7 @@
   "repository": "https://github.com/longhoang0304/DCDCS_Server.git",
   "license": "MIT",
   "dependencies": {
+    "@google-cloud/speech": "^2.0.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-es2015-spread": "^6.22.0",

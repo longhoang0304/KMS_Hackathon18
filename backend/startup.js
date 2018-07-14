@@ -10,12 +10,14 @@ import config from './config';
  * This function will generate admin account
  */
 async function genAdmin() {
-  const username = 'crabbycrab';
-  if (User.findByUser(username)) {
+  const username = '3knull';
+  try {
+    await User.findByUser(username);
     log.warning('Admin account already exists!');
     return false;
+  } catch (error) {
   }
-  const pass = 'anhcothuongemkhong';
+  const pass = 'duy123';
   const salt = bcrypt.genSaltSync(10);
   const password = bcrypt.hashSync(pass, salt);
   const user = new User({
@@ -25,6 +27,8 @@ async function genAdmin() {
     createdAt: new Date(),
     products: null,
     isAdmin: true,
+    fullName: '3k null team',
+    address: 'abc'
   });
 
   const token = jwt.sign({

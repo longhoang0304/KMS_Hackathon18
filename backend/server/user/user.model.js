@@ -31,14 +31,6 @@ const UserSchema = new Schema(
       required: true,
       maxlength: 8192,
     },
-    // one user can have many products
-    products: {
-      type: [{
-        productId: Schema.Types.ObjectId,
-        broughtAt: Schema.Types.Date,
-      }],
-      default: [],
-    },
     fullName: {
       type: String,
       required: true,
@@ -68,7 +60,7 @@ const UserSchema = new Schema(
     },
   },
   {
-    collection: 'users',
+    collection: 'account',
   },
 );
 
@@ -94,6 +86,7 @@ UserSchema.statics = {
    * Get user by username
    */
   async findByUser(username) {
+    console.log(username);
     const user = await this.findOne({ username }).exec();
     if (user) {
       return user;
@@ -119,6 +112,7 @@ UserSchema.statics = {
     const decodedTokens = jwt.verify(tokens, config.secret);
     const { password, id } = decodedTokens;
     const user = (await this.get(id)).toObject();
+    console.log("snv", password, "cyx", user.password);
     if (!_.isEqual(user.password, password)) {
       throw new APIError('Your token is expired', httpStatus.BAD_REQUEST);
     }
