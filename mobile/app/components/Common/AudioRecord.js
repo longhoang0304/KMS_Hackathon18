@@ -65,11 +65,13 @@ class AudioRecord extends Component {
       volume: 1.0,
       rate: 1.0,
     };
+
     this.recordingSettings = JSON.parse(
-      JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY));
+      JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY));
     // console.log(this.frecordingSettings);
     // // UNCOMMENT THIS TO TEST maxFileSize:
-    // this.recordingSettings.android['maxFileSize'] = 12000;
+    // this.recordingSettings.android['sampleRate'] = 8000;
+    // this.recordingSettings.android['numberOfChannels'] = 1;
   }
 
   componentDidMount() {
@@ -169,9 +171,9 @@ class AudioRecord extends Component {
       // Do nothing -- we are already unloaded.
     }
     const info = await FileSystem.getInfoAsync(this.recording.getURI());
-    const contents = await FileSystem.readAsStringAsync(this.recording.getURI());
-    sendAnswer(Base64.encode(contents));
-    // sendAnswer(this.recording.getURI());
+    // const contents = await FileSystem.readAsStringAsync(this.recording.getURI());
+    // const base64Content = Base64.encode(contents);
+    // sendAnswer(base64Content);
     console.log(`FILE INFO: ${JSON.stringify(info)}`);
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -195,6 +197,7 @@ class AudioRecord extends Component {
     this.setState({
       isLoading: false,
     });
+    sendAnswer(this.recording.getURI());
   }
 
   _onRecordPressed = () => {

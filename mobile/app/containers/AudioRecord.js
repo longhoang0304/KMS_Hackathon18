@@ -3,8 +3,7 @@ import AudioRecord from '../components/Common/AudioRecord';
 import { SysActions } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({
-  ...state.userInfo,
-  ...ownProps,
+
 });
 
 const mapDispatchToProps = {

@@ -32,8 +32,11 @@ const connectToServer = () => async (dispatch) => {
 
   if (res.ok) {
     const token = await getToken();
-    const decoded = await jwdDecode(token);
-    dispatch(AuthActions.loginSuccess(decoded.id || ''));
+    let decoded;
+    if (token) {
+      decoded = await jwdDecode(token);
+      dispatch(AuthActions.loginSuccess(decoded.id || ''));
+    }
     dispatch(connectSuccess(!!token));
     return;
   }
@@ -70,8 +73,8 @@ const sendAnswer = (content) => async (dispatch, getState) => {
     interviewId: '5b49c1eb494a872058ef81c0',
   };
   try {
-    res = await post(APIUrl('answer'), true, body);
-    // res = await postForm(APIUrl('answer'), content);
+    // res = await post(APIUrl('answer'), true, body);
+    res = await postForm(APIUrl('answer'), content);
   } catch (error) {
     console.log(error.message);
     dispatch(sendAnswerFailed());
