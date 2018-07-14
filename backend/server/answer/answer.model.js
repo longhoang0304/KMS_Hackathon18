@@ -6,24 +6,24 @@ const AnswerSchema = new Schema(
   {
     interviewId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
     },
     questionId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
     },
     content: {
       type: String,
       required: true,
-      maxlength: 2000
+      maxlength: 2000,
     },
     score: {
-      type: Number      
-    }
+      type: Number,
+    },
   },
   {
     collection: 'answer',
