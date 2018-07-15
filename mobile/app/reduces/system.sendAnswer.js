@@ -7,7 +7,7 @@ const initState = {
   score: 0,
 };
 
-const connectionReducer = (state = initState, action) => {
+const sendingAnsReducer = (state = initState, action) => {
   const { errorMsg, score } = action.payload || {};
 
   switch (action.type) {
@@ -41,4 +41,4 @@ const connectionReducer = (state = initState, action) => {
   }
 };
 
-export default connectionReducer;
+export default sendingAnsReducer;

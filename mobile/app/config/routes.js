@@ -3,13 +3,17 @@ import Welcome from '../containers/Welcome';
 import Help from '../screens/Help';
 import Login from '../containers/Login';
 import Home from '../containers/Home';
+import SkillInput from '../screens/SkillInput';
+import JobResult from '../containers/JobResult';
 
 const HomeStack = createStackNavigator(
   {
     Home,
+    SkillInput,
+    JobResult,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'JobResult',
     headerMode: 'none',
   },
 );

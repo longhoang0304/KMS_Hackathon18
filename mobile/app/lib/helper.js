@@ -60,8 +60,7 @@ const post = genHttpMethod('post');
 const put = genHttpMethod('put');
 const del = genHttpMethod('delete');
 
-async function postForm(url, uri) {
-  console.log('Uploading ' + uri);
+async function postForm(url, uri, body) {
   const apiUrl = url;
   const uriParts = uri.split('.');
   const fileType = uriParts[uriParts.length - 1];
@@ -73,19 +72,22 @@ async function postForm(url, uri) {
     uri,
     name: `recording.${fileType}`,
     type: `audio/x-${fileType}`,
+    ...body,
   });
+  formData.append('questionId', body.questionId);
+  formData.append('userId', body.userId);
+  formData.append('interviewId', body.interviewId);
+
+  console.log(formData);
 
   const options = {
     method: 'POST',
     body: formData,
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'multipart/form-data',
       'x-access-token': token,
     },
   };
-
-  console.log('POSTing ' + uri + ' to ' + apiUrl);
   return fetch(apiUrl, options);
 }
 
