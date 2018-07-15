@@ -1,5 +1,5 @@
 import express from 'express';
-import * as modelCtrl from './model.controller';
+import * as modelCtrl from './interview.controller';
 import { genUserVerification } from '../helper/utils';
 
 const router = express.Router();
@@ -22,7 +22,7 @@ function verificationFunction(req, res401, next) {
  * @param {Request} req
  * @param {Response} res
  * @param {Function} next
- * Middleware helps verrify user
+ * Middleware helps verify user
  */
 const verifyUser = genUserVerification(verificationFunction);
 router.use(verifyUser);

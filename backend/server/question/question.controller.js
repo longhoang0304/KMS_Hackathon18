@@ -1,4 +1,4 @@
-import Product from './product.model';
+import Model from './question.model';
 
 /**
  *
@@ -6,12 +6,12 @@ import Product from './product.model';
  * @param {*} res
  * @param {*} next
  * @param {*} id
- * Load single product
+ * Load single model
  */
 async function load(req, res, next, id) {
   try {
-    const product = await Product.get(id);
-    req.product = product;
+    const model = await Model.get(id);
+    req.model = model;
     return next();
   } catch (error) {
     const status = error.status || 500;
@@ -25,21 +25,21 @@ async function load(req, res, next, id) {
  *
  * @param {*} req
  * @param {*} res
- * Get product
+ * Get model
  */
 function get(req, res) {
-  return res.json(req.product);
+  return res.json(req.model);
 }
 
 async function update(req, res) {
-  const { product } = req;
-  let savedproduct = null;
+  const { model } = req;
+  let savedmodel = null;
 
-  product.productname = req.body.productname;
+  model.modelname = req.body.modelname;
 
   try {
-    savedproduct = await product.save();
-    return res.json(savedproduct);
+    savedmodel = await model.save();
+    return res.json(savedmodel);
   } catch (error) {
     const status = error.status || 500;
     return res.status(status).json({
@@ -49,13 +49,13 @@ async function update(req, res) {
 }
 
 async function create(req, res) {
-  const product = new Product({
+  const model = new Model({
     ...req.body,
   });
 
   try {
-    const newproduct = await product.save();
-    return res.json(newproduct);
+    const newmodel = await model.save();
+    return res.json(newmodel);
   } catch (error) {
     const status = error.status || 500;
     return res.status(status).json({
@@ -67,8 +67,8 @@ async function create(req, res) {
 async function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
   try {
-    const productList = await Product.list({ skip, limit });
-    return res.json(productList);
+    const modelList = await Model.list({ skip, limit });
+    return res.json(modelList);
   } catch (error) {
     const status = error.status || 500;
     return res.status(status).json({
@@ -78,10 +78,10 @@ async function list(req, res) {
 }
 
 async function remove(req, res) {
-  const { product } = req;
+  const { model } = req;
   try {
-    const deletedproduct = await product.remove();
-    return res.json(deletedproduct);
+    const deletedmodel = await model.remove();
+    return res.json(deletedmodel);
   } catch (error) {
     const status = error.status || 500;
     return res.status(status).json({
