@@ -2,8 +2,9 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Alert } from 'react-native';
 import { Button, Text } from 'react-native-elements';
-import LoadingDialog from '../components/Common/LoadingDialog';
+import { Speech } from 'expo';
 
+import LoadingDialog from '../components/Common/LoadingDialog';
 import { H1, H6, WhiteText } from '../components/Text';
 import WeatherImage from '../components/Common/WeatherImage';
 import WallpaperBackground from '../components/Common/WallpaperBackground';
@@ -149,6 +150,26 @@ class Home extends Component {
               width: '100%',
             }}
           >
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'flex-start',
+              paddingBottom: 15,
+            }}>
+              <Button
+                buttonStyle={{
+                  backgroundColor: 'rgba(0, 255, 187, 0.6)',
+                  marginHorizontal: 0,
+                  marginVertical: 0,
+                }}
+                rounded={true}
+                title='Speak'
+                onPress={() => Speech.speak('Xin chào việt nam. Tôi tên là Sơn chó, điên', {
+                  language: 'vi', pitch: 1, rate: 1.2,
+                })}
+              />
+            </View>
             <View style={{
               flex: 1,
               flexDirection: 'column',
