@@ -5,15 +5,17 @@ import Login from '../containers/Login';
 import Home from '../containers/Home';
 import SkillInput from '../screens/SkillInput';
 import JobResult from '../containers/JobResult';
+import Interview from '../containers/Interview';
 
 const HomeStack = createStackNavigator(
   {
     Home,
     SkillInput,
     JobResult,
+    Interview,
   },
   {
-    initialRouteName: 'JobResult',
+    initialRouteName: 'SkillInput',
     headerMode: 'none',
   },
 );

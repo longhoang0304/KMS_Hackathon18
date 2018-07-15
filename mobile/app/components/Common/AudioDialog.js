@@ -6,6 +6,7 @@ import AudioRecord from '../../containers/AudioRecord';
 const AudioDialog = (props) => {
   const {
     isShow,
+    closeModal,
   } = props;
 
   return (
@@ -13,11 +14,11 @@ const AudioDialog = (props) => {
       dialogTitle={<DialogTitle title='Audio' />}
       ref={(popupDialog) => { this.popupDialog = popupDialog; }}
       show={isShow}
-      width={0.85}
-      height={450}
-      dismissOnTouchOutside={true}
+      width={0.65}
+      height={200}
+      dismissOnTouchOutside={false}
     >
-      <AudioRecord />
+      <AudioRecord closeModal={closeModal} />
     </PopupDialog>
   );
 };

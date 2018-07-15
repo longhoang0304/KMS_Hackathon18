@@ -163,11 +163,120 @@ const fetchResult = () => async (dispatch) => {
 };
 /* =================== FETCH RESULT END ====================== */
 
+/* ================== FETCH QUESTIONS START ===================== */
+const fetchingQuestions = () => ({
+  type: SysTypes.SYSTEM_FETCH_QUESTIONS,
+});
+
+const fetchQuestiontSuccess = (questions) => ({
+  type: SysTypes.SYSTEM_FETCH_QUESTIONS_SUCCESS,
+  payload: {
+    questions,
+  },
+});
+
+const fetchQuestionFailed = (errorMsg) => ({
+  type: SysTypes.SYSTEM_FETCH_QUESTIONS_FAILED,
+  payload: {
+    errorMsg,
+  },
+});
+
+const fetchQuestion = () => async (dispatch) => {
+  dispatch(fetchingQuestions());
+  let res;
+  try {
+    // res = await post(APIUrl('answer'), true, body);
+    res = await get(APIUrl('question'), true);
+    const json = await res.json();
+    dispatch(fetchQuestiontSuccess(json));
+    return;
+  } catch (error) {
+    console.log(error.message);
+    dispatch(fetchQuestionFailed(error.messag));
+  }
+};
+/* =================== FETCH QUESTIONS END ====================== */
+
+/* ================== FETCH SCORE START ===================== */
+const fetchingScore = () => ({
+  type: SysTypes.SYSTEM_FETCH_SCORE,
+});
+
+const fetchScoreSuccess = (totalScore) => ({
+  type: SysTypes.SYSTEM_FETCH_SCORE_SUCCESS,
+  payload: {
+    totalScore,
+  },
+});
+
+const fetchScoreFailed = (errorMsg) => ({
+  type: SysTypes.SYSTEM_FETCH_SCORE_FAILED,
+  payload: {
+    errorMsg,
+  },
+});
+
+const fetchScore = () => async (dispatch) => {
+  dispatch(fetchingScore());
+  let res;
+  try {
+    // res = await post(APIUrl('answer'), true, body);
+    res = await get(APIUrl('answer'), true);
+    const json = await res.json();
+    const totalScore = _.reduce(json, (s, n) => s + n.score, 0);
+    dispatch(fetchScoreSuccess(totalScore));
+    return;
+  } catch (error) {
+    console.log(error.message);
+    dispatch(fetchScoreFailed(error.messag));
+  }
+};
+/* =================== FETCH SCORE END ====================== */
+
+/* ================== FETCH MAX SCORE START ===================== */
+const fetchingMaxScore = () => ({
+  type: SysTypes.SYSTEM_FETCH_MAX_SCORE,
+});
+
+const fetchMaxScoreSuccess = (maxScore) => ({
+  type: SysTypes.SYSTEM_FETCH_MAX_SCORE_SUCCESS,
+  payload: {
+    maxScore,
+  },
+});
+
+const fetchMaxScoreFailed = (errorMsg) => ({
+  type: SysTypes.SYSTEM_FETCH_MAX_SCORE_FAILED,
+  payload: {
+    errorMsg,
+  },
+});
+
+const fetchMaxScore = (id) => async (dispatch) => {
+  dispatch(fetchingMaxScore());
+  let res;
+  try {
+    // res = await post(APIUrl('answer'), true, body);
+    res = await get(APIUrl(`interview/${id || '5b49c1eb494a872058ef81c0'}`), true);
+    const json = await res.json();
+    dispatch(fetchMaxScoreSuccess(json.requirementScore));
+    return;
+  } catch (error) {
+    console.log(error.message);
+    dispatch(fetchMaxScoreFailed(error.messag));
+  }
+};
+/* =================== FETCH MAX SCORE END ====================== */
+
 const SystemActions = {
   connectToServer,
   sendAnswer,
   fetchResult,
   fetchOrg,
+  fetchQuestion,
+  fetchScore,
+  fetchMaxScore,
 };
 
 export default SystemActions;

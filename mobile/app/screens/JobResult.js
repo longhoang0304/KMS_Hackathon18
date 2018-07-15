@@ -20,7 +20,7 @@ class JobResult extends PureComponent {
 
   itemPressHandler = (id) => {
     const { navigation } = this.props;
-    navigation.navigate('Home', id);
+    navigation.navigate('Interview', {interviewId: id});
   }
 
   keyExtractor = (item) => item._id
@@ -67,7 +67,7 @@ class JobResult extends PureComponent {
             <Text style={{
               fontSize: 24,
             }}>
-              Đã tìm thấy {resultCount} kết quả
+              {resultCount < 0 ? `Đang tìm kiếm`: `Đã tìm thấy ${resultCount} kết quả`}
             </Text>
           </WhiteText>
           <FlatList

@@ -2,17 +2,13 @@
 
 import React, { Component } from 'react';
 import {
-  Dimensions,
   Image,
-  Slider,
   StyleSheet,
   Text,
   TouchableHighlight,
   View
 } from 'react-native';
-import { Button } from 'react-native-elements';
-import  Expo, { Asset, Audio, FileSystem, Font, Permissions } from 'expo';
-import { Base64 } from 'js-base64';
+import  { Asset, Audio, FileSystem, Permissions } from 'expo';
 
 class Icon {
   constructor(module, width, height) {
@@ -25,19 +21,9 @@ class Icon {
 const ICON_RECORD_BUTTON = new Icon(require('../../assets/images/audio/record_button.png'), 70, 119);
 const ICON_RECORDING = new Icon(require('../../assets/images/audio/record_icon.png'), 20, 14);
 
-const ICON_PLAY_BUTTON = new Icon(require('../../assets/images/audio/play_button.png'), 34, 51);
-const ICON_PAUSE_BUTTON = new Icon(require('../../assets/images/audio/pause_button.png'), 34, 51);
-const ICON_STOP_BUTTON = new Icon(require('../../assets/images/audio/stop_button.png'), 22, 22);
-
 const ICON_MUTED_BUTTON = new Icon(require('../../assets/images/audio/muted_button.png'), 67, 58);
-const ICON_UNMUTED_BUTTON = new Icon(require('../../assets/images/audio/unmuted_button.png'), 67, 58);
-
-const ICON_TRACK_1 = new Icon(require('../../assets/images/audio/track_1.png'), 166, 5);
 const ICON_THUMB_1 = new Icon(require('../../assets/images/audio/thumb_1.png'), 18, 19);
-const ICON_THUMB_2 = new Icon(require('../../assets/images/audio/thumb_2.png'), 15, 19);
 
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
-const BACKGROUND_COLOR = '#FFF8ED';
 const LIVE_COLOR = '#FF0000';
 const DISABLED_OPACITY = 0.5;
 const RATE_SCALE = 3.0;
@@ -68,10 +54,6 @@ class AudioRecord extends Component {
 
     this.recordingSettings = JSON.parse(
       JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY));
-    // console.log(this.frecordingSettings);
-    // // UNCOMMENT THIS TO TEST maxFileSize:
-    // this.recordingSettings.android['sampleRate'] = 8000;
-    // this.recordingSettings.android['numberOfChannels'] = 1;
   }
 
   componentDidMount() {
@@ -164,7 +146,7 @@ class AudioRecord extends Component {
     this.setState({
       isLoading: true,
     });
-    const { sendAnswer } = this.props;
+    const { sendAnswer, closeModal } = this.props;
     try {
       await this.recording.stopAndUnloadAsync();
     } catch (error) {
@@ -198,6 +180,7 @@ class AudioRecord extends Component {
       isLoading: false,
     });
     sendAnswer(this.recording.getURI());
+    closeModal();
   }
 
   _onRecordPressed = () => {
@@ -205,34 +188,6 @@ class AudioRecord extends Component {
       this._stopRecordingAndEnablePlayback();
     } else {
       this._stopPlaybackAndBeginRecording();
-    }
-  };
-
-  _onPlayPausePressed = () => {
-    if (this.sound != null) {
-      if (this.state.isPlaying) {
-        this.sound.pauseAsync();
-      } else {
-        this.sound.playAsync();
-      }
-    }
-  };
-
-  _onStopPressed = () => {
-    if (this.sound != null) {
-      this.sound.stopAsync();
-    }
-  };
-
-  _onMutePressed = () => {
-    if (this.sound != null) {
-      this.sound.setIsMutedAsync(!this.state.muted);
-    }
-  };
-
-  _onVolumeSliderValueChange = value => {
-    if (this.sound != null) {
-      this.sound.setVolumeAsync(value);
     }
   };
 
@@ -253,53 +208,6 @@ class AudioRecord extends Component {
   _onPitchCorrectionPressed = async value => {
     this._trySetRate(this.state.rate, !this.state.shouldCorrectPitch);
   };
-
-  _onSeekSliderValueChange = value => {
-    if (this.sound != null && !this.isSeeking) {
-      this.isSeeking = true;
-      this.shouldPlayAtEndOfSeek = this.state.shouldPlay;
-      this.sound.pauseAsync();
-    }
-  };
-
-  _onSeekSliderSlidingComplete = async value => {
-    if (this.sound != null) {
-      this.isSeeking = false;
-      const seekPosition = value * this.state.soundDuration;
-      if (this.shouldPlayAtEndOfSeek) {
-        this.sound.playFromPositionAsync(seekPosition);
-      } else {
-        this.sound.setPositionAsync(seekPosition);
-      }
-    }
-  };
-
-  _getSeekSliderPosition() {
-    if (
-      this.sound != null &&
-      this.state.soundPosition != null &&
-      this.state.soundDuration != null
-    ) {
-      return this.state.soundPosition / this.state.soundDuration;
-    }
-    return 0;
-  }
-
-  _getMMSSFromMillis(millis) {
-    const totalSeconds = millis / 1000;
-    const seconds = Math.floor(totalSeconds % 60);
-    const minutes = Math.floor(totalSeconds / 60);
-
-    const padWithZero = number => {
-      const string = number.toString();
-      if (number < 10) {
-        return '0' + string;
-      }
-      return string;
-    };
-    return padWithZero(minutes) + ':' + padWithZero(seconds);
-  }
-
   _getPlaybackTimestamp() {
     if (
       this.sound != null &&
@@ -320,6 +228,21 @@ class AudioRecord extends Component {
     return `${this._getMMSSFromMillis(0)}`;
   }
 
+  _getMMSSFromMillis(millis) {
+    const totalSeconds = millis / 1000;
+    const seconds = Math.floor(totalSeconds % 60);
+    const minutes = Math.floor(totalSeconds / 60);
+
+    const padWithZero = number => {
+      const string = number.toString();
+      if (number < 10) {
+        return '0' + string;
+      }
+      return string;
+    };
+    return padWithZero(minutes) + ':' + padWithZero(seconds);
+  }
+
   render() {
     return !this.state.haveRecordingPermissions ? (
       <View style={styles.container}>
@@ -338,9 +261,7 @@ class AudioRecord extends Component {
               opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
             },
           ]}>
-          <View />
           <View style={styles.recordingContainer}>
-            <View />
             <TouchableHighlight
               style={styles.wrapper}
               onPress={this._onRecordPressed}
@@ -348,9 +269,8 @@ class AudioRecord extends Component {
               <Image style={styles.image} source={ICON_RECORD_BUTTON.module} />
             </TouchableHighlight>
             <View style={styles.recordingDataContainer}>
-              <View />
               <Text style={[styles.liveText]}>
-                {this.state.isRecording ? 'LIVE' : ''}
+                {this.state.isRecording ? 'LIVE' : 'Press micro button to start recording'}
               </Text>
               <View style={styles.recordingDataRowContainer}>
                 <Image
@@ -361,97 +281,8 @@ class AudioRecord extends Component {
                   {this._getRecordingTimestamp()}
                 </Text>
               </View>
-              <View />
             </View>
-            <View />
           </View>
-          <View />
-        </View>
-        <View
-          style={[
-            styles.halfScreenContainer,
-            {
-              opacity:
-                !this.state.isPlaybackAllowed || this.state.isLoading ? DISABLED_OPACITY : 1.0,
-            },
-          ]}>
-          <View />
-          <View style={styles.playbackContainer}>
-            <Slider
-              style={styles.playbackSlider}
-              trackImage={ICON_TRACK_1.module}
-              thumbImage={ICON_THUMB_1.module}
-              value={this._getSeekSliderPosition()}
-              onValueChange={this._onSeekSliderValueChange}
-              onSlidingComplete={this._onSeekSliderSlidingComplete}
-              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
-            />
-            <Text style={[styles.playbackTimestamp]}>
-              {this._getPlaybackTimestamp()}
-            </Text>
-          </View>
-          <View style={[styles.buttonsContainerBase, styles.buttonsContainerTopRow]}>
-            <View style={styles.volumeContainer}>
-              <TouchableHighlight
-                style={styles.wrapper}
-                onPress={this._onMutePressed}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
-                <Image
-                  style={styles.image}
-                  source={this.state.muted ? ICON_MUTED_BUTTON.module : ICON_UNMUTED_BUTTON.module}
-                />
-              </TouchableHighlight>
-              <Slider
-                style={styles.volumeSlider}
-                trackImage={ICON_TRACK_1.module}
-                thumbImage={ICON_THUMB_2.module}
-                value={1}
-                onValueChange={this._onVolumeSliderValueChange}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
-              />
-            </View>
-            <View style={styles.playStopContainer}>
-              <TouchableHighlight
-
-                style={styles.wrapper}
-                onPress={this._onPlayPausePressed}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
-                <Image
-                  style={styles.image}
-                  source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
-                />
-              </TouchableHighlight>
-              <TouchableHighlight
-
-                style={styles.wrapper}
-                onPress={this._onStopPressed}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
-                <Image style={styles.image} source={ICON_STOP_BUTTON.module} />
-              </TouchableHighlight>
-            </View>
-            <View />
-          </View>
-          <View style={[styles.buttonsContainerBase, styles.buttonsContainerBottomRow]}>
-            <Text style={[styles.timestamp]}>Rate:</Text>
-            <Slider
-              style={styles.rateSlider}
-              trackImage={ICON_TRACK_1.module}
-              thumbImage={ICON_THUMB_1.module}
-              value={this.state.rate / RATE_SCALE}
-              onSlidingComplete={this._onRateSliderSlidingComplete}
-              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
-            />
-            <TouchableHighlight
-
-              style={styles.wrapper}
-              onPress={this._onPitchCorrectionPressed}
-              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
-              <Text style={[]}>
-                PC: {this.state.shouldCorrectPitch ? 'yes' : 'no'}
-              </Text>
-            </TouchableHighlight>
-          </View>
-          <View />
         </View>
       </View>
     );
@@ -546,31 +377,11 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     paddingRight: 20,
   },
-  playStopContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
-    maxWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
-  },
-  volumeContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  volumeSlider: {
-    width: DEVICE_WIDTH / 2.0 - ICON_MUTED_BUTTON.width,
-  },
   buttonsContainerBottomRow: {
     maxHeight: ICON_THUMB_1.height,
     alignSelf: 'stretch',
     paddingRight: 20,
     paddingLeft: 20,
-  },
-  rateSlider: {
-    width: DEVICE_WIDTH / 2.0,
   },
 });
 

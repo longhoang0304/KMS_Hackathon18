@@ -78,8 +78,6 @@ async function postForm(url, uri, body) {
   formData.append('userId', body.userId);
   formData.append('interviewId', body.interviewId);
 
-  console.log(formData);
-
   const options = {
     method: 'POST',
     body: formData,
