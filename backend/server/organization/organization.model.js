@@ -2,54 +2,49 @@ import mongoose, { Schema } from 'mongoose';
 import httpStatus from 'http-status';
 import APIError from '../helper/APIError';
 
-const ModelSchema = new Schema(
+const OrganizationSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
       maxlength: 255,
     },
-    price: {
-      type: Number,
+    address: {
+      type: String,
       required: true,
+      maxlength: 255,
     },
-    quantity: {
-      type: Number,
+    email: {
+      type: String,
       required: true,
+      maxlength: 255,
     },
-    warrantyPeriod: {
-      type: Number,
+    phone: {
+      type: String,
       required: true,
-      default: 12,
-    }, // monthes
-    sale: {
-      type: Number,
-      default: 0,
+      maxlength: 32,
     },
-    releaseDate: {
-      type: Schema.Types.Date,
-      default: null,
-    },
-    supportEndDate: {
-      type: Schema.Types.Date,
-      default: null,
+    desc: {
+      type: String,
+      default: '',
+      maxlength: 1024,
     },
   },
   {
-    collection: 'models',
+    collection: 'organization',
   },
 );
 
-ModelSchema.method({
+OrganizationSchema.method({
 });
 
-ModelSchema.statics = {
+OrganizationSchema.statics = {
   async get(id) {
     const Model = await this.findById(id).exec();
     if (Model) {
       return Model;
     }
-    throw new APIError('No such model exist!', httpStatus.NOT_FOUND);
+    throw new APIError('No such question exist!', httpStatus.NOT_FOUND);
   },
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
@@ -60,4 +55,4 @@ ModelSchema.statics = {
   },
 };
 
-export default mongoose.model('Models', ModelSchema);
+export default mongoose.model('Organization', OrganizationSchema);

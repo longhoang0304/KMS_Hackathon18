@@ -1,10 +1,11 @@
 import express from 'express';
 import userRoutes from './server/user/user.route';
-import productRoutes from './server/product/product.route';
-import queueRoutes from './server/queue/message.route';
 import authRoutes from './server/auth/auth.route';
-import modelRoutes from './server/model/model.route';
-import productUserRoutes from './server/product.user/product.user.route';
+import orgRoutes from './server/organization/organization.route';
+import interviewRoutes from './server/interview/interview.route';
+import questionRoutes from './server/question/question.route';
+import answerRoutes from './server/answer/answer.route';
+
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -16,20 +17,19 @@ router.get('/health-check', (req, res) =>
 // mount user routes at /users
 router.use('/users', userRoutes);
 
-// mount products routes at /products
-router.use('/products', productRoutes);
-
-// mount products user routes at /products
-router.use('/product-users', productUserRoutes);
-
-
-// mount actions routes at /actions
-router.use('/actions', queueRoutes);
-
-// mount authenticate
+// mount authenticate routes at /auth
 router.use('/auth', authRoutes);
 
-// mount models
-router.use('/models', modelRoutes);
+// mount organization routes at /org
+router.use('/org', orgRoutes);
+
+// mount interview routes at /interview
+router.use('/interview', interviewRoutes);
+
+// mount question routes at /question
+router.use('/question', questionRoutes);
+
+// mount answer routes at /answer
+router.use('/answer', answerRoutes);
 
 export default router;

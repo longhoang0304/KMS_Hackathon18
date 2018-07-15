@@ -6,13 +6,17 @@ import cors from 'cors';
 import morgan from 'morgan';
 import chalk from 'chalk';
 import routes from '../index.route';
+import multer from 'multer';
 
+const upload = multer();
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '1GB'}));
 app.use(bodyParser.urlencoded({
   extended: true,
+  limit: '1GB'
 }));
+app.use(upload.any());
 
 app.use(helmet());
 app.use(cors());
@@ -64,6 +68,8 @@ app.use(morgan((tokens, req, res) => { // eslint-disable-line
     contentLength,
   ].join(' | ');
 }));
+
+app.disable('etag');
 
 app.use('/api', routes);
 

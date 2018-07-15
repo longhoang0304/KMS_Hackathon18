@@ -8,8 +8,5 @@ router.route('/login')
 router.route('/forgot')
   .post(authCtrl.forgotPassword);
 
-router.route('/login/product')
-  .post(authCtrl.productLogin);
-
 
 export default router;

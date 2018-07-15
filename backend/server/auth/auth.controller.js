@@ -9,7 +9,6 @@ import config from '../../config';
 import User from '../user/user.model';
 import APIError from '../helper/APIError';
 import { checkPassword } from '../helper/utils';
-import ProductUser from '../product.user/product.user.model';
 
 const genLoginFunction = (UserModel) => async (req, res) => {
   const { username, password } = req.body;
@@ -69,13 +68,5 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-/**
- *
- * @param {Request} req
- * @param {Response} res
- * Generate token on login
- */
-const productLogin = genLoginFunction(ProductUser);
 
-
-export { login, productLogin, forgotPassword };
+export { login, forgotPassword };

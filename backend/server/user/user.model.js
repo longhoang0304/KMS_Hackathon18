@@ -31,14 +31,6 @@ const UserSchema = new Schema(
       required: true,
       maxlength: 8192,
     },
-    // one user can have many products
-    products: {
-      type: [{
-        productId: Schema.Types.ObjectId,
-        broughtAt: Schema.Types.Date,
-      }],
-      default: [],
-    },
     fullName: {
       type: String,
       required: true,
@@ -68,7 +60,7 @@ const UserSchema = new Schema(
     },
   },
   {
-    collection: 'users',
+    collection: 'account',
   },
 );
 

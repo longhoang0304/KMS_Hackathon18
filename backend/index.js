@@ -26,8 +26,8 @@ db.on('error', (err) => {
 });
 
 log.info('Connecting to database');
-mongoose.connect('mongodb://ds255260.mlab.com:55260/dcdcs', {
-  user: 'crabbycrab',
-  pass: 'capstoneproject2018',
+mongoose.connect('mongodb://ds247007.mlab.com:47007/hackathon', {
+  user: '3knull',
+  pass: '3knull123',
   connectTimeoutMS: 30000,
 });
